@@ -137,6 +137,13 @@ const Register = () => {
           8 to 24 characters. <br />
           Must include uppercase and lowercase letters, a number and a special
           character. <br />
+          Allowed special characters:
+          {/* we put aria-label attributes here for each of the special character so the screen reader can read out the special characters for accessibility*/}
+          <span aria-label="exclamation mark">!</span>
+          <span aria-label="at symbol">@</span>
+          <span aria-label="hashtag">#</span>
+          <span aria-label="dollar sign">$</span>
+          <span aria-label="percent">%</span>
         </p>
       </form>
     </section>
