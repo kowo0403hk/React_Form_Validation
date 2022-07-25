@@ -6,9 +6,11 @@ import {
   faInfo,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "./api/axios";
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+const REGISTER_URL = "/register";
 
 const Register = () => {
   const userRef: any = useRef();
@@ -72,10 +74,36 @@ const Register = () => {
     }
 
     // if a backend was not set up, we can do the following, and show the "success" message with while the success variable is set to true:
-    console.log(user, pwd);
-    setSuccess(true);
+    // console.log(user, pwd);
+    // setSuccess(true);
 
     // if a backend was set up, we will proceed to an axios call
+    try {
+      const response: any = await axios.post(
+        REGISTER_URL,
+        JSON.stringify({ user, pwd }),
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
+
+      console.log(response.data);
+      console.log(response.accessToken);
+
+      setSuccess(true);
+      // clear the input fields
+    } catch (e: any) {
+      // optional chaining with "?"
+      if (!e?.response) {
+        setErrMsg("No Server Response");
+      } else if (e.response?.status === 409) {
+        setErrMsg("Username Taken");
+      } else {
+        setErrMsg("Registration Failed");
+      }
+      errRef.current.focus();
+    }
   };
 
   return (
