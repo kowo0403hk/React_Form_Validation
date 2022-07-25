@@ -3,7 +3,6 @@ import {
   faCheck,
   faTimes,
   faInfoCircle,
-  faInfo,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "./api/axios";
