@@ -22,7 +22,7 @@ const Register = () => {
   const [validPwd, setValidPwd] = useState(false);
   const [pwdFocus, setPwdFocus] = useState(false);
 
-  const [matchPwd, setmatchPwd] = useState("");
+  const [matchPwd, setMatchPwd] = useState("");
   const [validMatch, setValidMatch] = useState(false);
   const [matchFocus, setMatchFocus] = useState(false);
 
@@ -145,7 +145,52 @@ const Register = () => {
           <span aria-label="dollar sign">$</span>
           <span aria-label="percent">%</span>
         </p>
+
+        {/* confirm password field */}
+        <label htmlFor="confirm_pwd">
+          Confirm Password:
+          <span className={validMatch && matchPwd ? "valid" : "hide"}>
+            <FontAwesomeIcon icon={faCheck} />
+          </span>
+          <span className={validMatch || !matchPwd ? "hide" : "invalid"}>
+            <FontAwesomeIcon icon={faTimes} />
+          </span>
+        </label>
+        <input
+          type="password"
+          id="confirm_pwd"
+          onChange={(e) => {
+            setMatchPwd(e.target.value);
+          }}
+          required
+          aria-invalid={validMatch ? "false" : "true"}
+          aria-describedby="confirmnote"
+          onFocus={() => setMatchFocus(true)}
+          onBlur={() => setMatchFocus(false)}
+        />
+        <p
+          id="confirmnote"
+          className={matchFocus && !validMatch ? "instructions" : "offscreen"}
+        >
+          <FontAwesomeIcon icon={faInfoCircle} />
+          Must match the first password input field.
+        </p>
+
+        {/* submit button, we disable the button if either of the field is not valid */}
+        <button
+          disabled={!validName || !validPwd || !validMatch ? true : false}
+        >
+          Sign Up
+        </button>
       </form>
+
+      <p>
+        Already registered? <br />
+        <span className="line">
+          {/* put a React router link here */}
+          <a href="#">Sign In</a>
+        </span>
+      </p>
     </section>
   );
 };
