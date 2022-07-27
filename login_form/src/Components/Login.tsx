@@ -1,5 +1,8 @@
 import { useRef, useState, useEffect, useContext } from "react";
 import AuthContext from "../context/AuthProvider";
+import axios from "../api/axios";
+
+const LOGIN_URL = "/auth";
 
 const Login = () => {
   const { setAuth } = useContext(AuthContext);
@@ -24,10 +27,44 @@ const Login = () => {
     e.preventDefault();
 
     // for demonstration where there is no backend set up
-    console.log(user, pwd);
-    setUser("");
-    setPwd("");
-    setSuccess(true);
+    // console.log(user, pwd);
+    // setUser("");
+    // setPwd("");
+    // setSuccess(true);
+
+    // with axios request
+    try {
+      const response = await axios.post(
+        LOGIN_URL,
+        JSON.stringify({ user, pwd }),
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
+
+      console.log(JSON.stringify(response?.data));
+
+      // JWT token
+      const accessToken: string = response?.data?.accessToken;
+      const roles: number = response?.data?.roles;
+      setAuth({ user, pwd, roles, accessToken });
+
+      setUser("");
+      setPwd("");
+      setSuccess(true);
+    } catch (err: any) {
+      if (!err?.response) {
+        setErrMsg("No Server Response");
+      } else if (err.response?.status === 400) {
+        setErrMsg("Missing Username or Password");
+      } else if (err.response?.status === 401) {
+        setErrMsg("Unauthorized");
+      } else {
+        setErrMsg("Login failed");
+      }
+      errRef.current.focus();
+    }
   };
 
   return (
